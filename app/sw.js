@@ -1,5 +1,5 @@
 // Service worker: cho app mở được khi mất mạng + hiện thông báo nhắc thuốc.
-const CACHE = 'gocare-patient-v5';
+const CACHE = 'gocare-patient-v6';
 const SHELL = ['./', 'index.html', 'styles.css', 'config.js', 'app.js', 'manifest.webmanifest', 'icon.svg'];
 
 self.addEventListener('install', e => {

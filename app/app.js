@@ -608,6 +608,7 @@ function openMedSheet(med) {
 // ---- Nhắc giờ uống thuốc ----
 const lastNag = {};
 function checkReminders() {
+  if (!session) return; // chưa đăng nhập thì không nhắc (tránh nhắc theo danh sách thuốc mẫu)
   const now = Date.now();
   for (const d of dosesToday()) {
     if (d.status !== 'due') continue;
