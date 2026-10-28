@@ -3,11 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "description": "App Bệnh Nhân GoCare: nhắc thuốc, gọi cấp cứu, camera chống té ngã — liên kết Web Quản Lý & Web Khách Hàng GoCare",
-  "type": "commonjs",
+  "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "build": "node -e \"console.log('GoCare: app tinh, khong can build')\"",
-    "hub": "node bridge/server.js",
-    "check": "node --check app/app.js && node --check bridge/server.js && node --check api/emergency.js"
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
   }
 }
+

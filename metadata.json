@@ -1,0 +1,7 @@
+{
+  "name": "GoCare Bệnh Nhân",
+  "description": "App Bệnh Nhân GoCare: nhắc thuốc, gọi cấp cứu, camera chống té ngã, theo dõi sức khỏe và liên kết hệ thống y tế GoCare.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
