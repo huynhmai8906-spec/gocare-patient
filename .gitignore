@@ -1,0 +1,23 @@
+# Khóa bí mật — KHÔNG BAO GIỜ đưa lên GitHub
+.env
+.env.*
+!.env.example
+bridge/.env
+
+# Dữ liệu thật của bệnh nhân trên Home Hub (tài khoản, phiên, cảnh báo, ảnh camera, giọng đọc đã tạo)
+bridge/data/
+
+# Model AI & giọng đọc (tải riêng, rất nặng)
+*.pt
+*.onnx
+*.onnx.json
+
+# Môi trường & công cụ
+node_modules/
+.vercel/
+__pycache__/
+*.pyc
+.venv/
+.claude/
+.DS_Store
+Thumbs.db

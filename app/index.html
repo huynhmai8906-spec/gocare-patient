@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b6b4a">
+  <title>GoCare Bệnh Nhân</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..700,0..1,0&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="booting">
+  <!-- Màn hình chờ -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <span class="splash-logo"><span class="ms fill">spa</span></span>
+    <span class="splash-name">GoCare</span>
+  </div>
+
+  <!-- Đăng nhập / đăng ký / làm quen -->
+  <section class="auth" id="authView" hidden>
+    <div class="auth-inner" id="authInner"></div>
+  </section>
+
+  <!-- Thanh trên cùng: lời chào + giọng đọc + ảnh đại diện -->
+  <header class="topbar">
+    <button class="greet" id="helloCard" data-say-fn="hello">
+      <span class="greet-eyebrow" id="helloEyebrow">Chào buổi sáng,</span>
+      <span class="greet-name" id="helloLine">GoCare</span>
+    </button>
+    <button class="voice-toggle" id="voiceToggle" aria-pressed="true" data-say="" aria-label="Bật tắt đọc to">
+      <span class="ms fill vt-icon" aria-hidden="true">volume_up</span>
+      <span class="waves" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    <button class="avatar" id="avatarBtn" data-go="settings" data-say="Hồ sơ của tôi"><span id="avatarText">G</span></button>
+  </header>
+
+  <main id="main">
+    <!-- ============ TRANG CHỦ ============ -->
+    <section class="screen active" id="screen-home" data-title="Trang chủ">
+      <button class="hero-card" id="clockBtn" data-say-fn="clock">
+        <span class="hc-label"><span id="clockDate">Hôm nay</span> <span class="ms">schedule</span></span>
+        <span class="hc-big" id="clockTime">--:--</span>
+        <span class="hc-sub" id="helloSub"><span class="dot"></span> Chúc bạn một ngày an lành</span>
+        <span class="hc-chip" aria-hidden="true"><span class="ms fill" id="helloIcon">light_mode</span><b>GoCare</b><small>An tâm mỗi ngày</small></span>
+      </button>
+
+      <div class="actions">
+        <button class="action" data-go="meds"><span class="act-ico"><span class="ms">medication</span></span>Thuốc</button>
+        <button class="action" data-go="safety"><span class="act-ico"><span class="ms">videocam</span></span>Camera</button>
+        <button class="action" data-go="health"><span class="act-ico"><span class="ms">monitor_heart</span></span>Sức khỏe</button>
+        <button class="action" id="okBtn" data-say="Tôi vẫn khỏe. Đã ghi nhận."><span class="act-ico"><span class="ms">sentiment_satisfied</span></span>Tôi khỏe</button>
+      </div>
+
+      <button class="sos" id="sosBtn" data-say="Nút gọi cấp cứu khẩn cấp">
+        <span class="sos-ring" aria-hidden="true"><span class="ms fill">e911_emergency</span></span>
+        <span class="sos-body"><span class="sos-text">Gọi Cấp Cứu</span><span class="sos-sub">Chạm 1 lần — bệnh viện nhận ngay</span></span>
+        <span class="ms sos-arrow" aria-hidden="true">arrow_forward</span>
+      </button>
+
+      <div class="card next-med" id="nextMedCard"></div>
+
+      <div class="sec-head"><h2>Thuốc hôm nay</h2><button class="see-all" data-go="meds">Xem tất cả <span class="ms">arrow_forward</span></button></div>
+      <div class="list card" id="homeDoses"></div>
+
+      <div class="sec-head"><h2>Tình trạng</h2></div>
+      <div class="status-row">
+        <button class="status" id="stCam" data-go="safety"></button>
+        <button class="status" id="stZone" data-go="safety"></button>
+        <button class="status" id="stLink" data-go="settings"></button>
+      </div>
+
+      <div class="sec-head"><h2>Gọi nhanh</h2></div>
+      <div class="list card" id="quickCalls"></div>
+
+      <a class="promo" href="https://mai-hu-nh-th-tuy-t-o684.vercel.app/" target="_blank" rel="noopener" data-say="Mở trang đặt điều dưỡng tại nhà">
+        <span class="promo-ico"><span class="ms">home_health</span></span>
+        <span><b>Đặt điều dưỡng tại nhà</b><small>Điều dưỡng GoCare có chứng chỉ, đến tận nhà 24/7</small></span>
+        <span class="ms">chevron_right</span>
+      </a>
+    </section>
+
+    <!-- ============ THUỐC ============ -->
+    <section class="screen" id="screen-meds" data-title="Thuốc của tôi">
+      <div class="page-head"><button class="back" data-go="home" aria-label="Quay lại"><span class="ms">arrow_back</span></button><h1>Thuốc của tôi</h1><button class="back" id="addMedTop" data-say="Thêm thuốc mới" aria-label="Thêm thuốc"><span class="ms">add</span></button></div>
+      <div class="green-card" id="medProgress"></div>
+      <div class="sec-head"><h2>Lịch hôm nay</h2></div>
+      <div id="todayDoses" class="dose-list"></div>
+      <div class="sec-head"><h2>Danh sách thuốc</h2></div>
+      <div id="medList" class="list card"></div>
+      <button class="btn big primary full" id="addMedBtn" data-say="Thêm thuốc mới"><span class="ms">add_circle</span> Thêm thuốc mới</button>
+      <div class="tip"><span class="ms">tips_and_updates</span><span><b>Mẹo nhỏ</b><br>Để hộp thuốc cạnh ly nước buổi sáng giúp không quên uống.</span></div>
+    </section>
+
+    <!-- ============ AN TOÀN ============ -->
+    <section class="screen" id="screen-safety" data-title="An toàn">
+      <div class="page-head"><button class="back" data-go="home" aria-label="Quay lại"><span class="ms">arrow_back</span></button><h1>An toàn</h1><span></span></div>
+
+      <div class="sec-head"><h2>Camera trong nhà</h2></div>
+      <div id="camList" class="cam-list"></div>
+      <button class="btn big primary full" id="addCamBtn" data-say="Cài camera mới"><span class="ms">add_a_photo</span> Cài camera mới</button>
+      <p class="muted small" id="camInfo"></p>
+
+      <div class="sec-head"><h2>Vùng an toàn khi ra ngoài</h2></div>
+      <div class="card">
+        <div class="zone-state" id="zoneState"></div>
+        <button class="btn big full" id="zoneToggle"></button>
+        <button class="btn full" id="setHomeBtn" data-say="Đặt vị trí hiện tại làm nhà"><span class="ms">home_pin</span> Đặt chỗ đang đứng làm NHÀ</button>
+        <p class="label">Bán kính an toàn</p>
+        <div class="seg" id="radiusSeg">
+          <button data-r="100">100 m</button><button data-r="200">200 m</button>
+          <button data-r="500">500 m</button><button data-r="1000">1 km</button>
+        </div>
+        <button class="btn ghost full" id="zoneTestBtn" data-say="Thử báo động ra khỏi vùng an toàn"><span class="ms">notifications_active</span> Thử báo động</button>
+      </div>
+
+      <div class="sec-head"><h2>Cảnh báo gần đây</h2></div>
+      <div id="alertList" class="list card"></div>
+    </section>
+
+    <!-- ============ SỨC KHỎE ============ -->
+    <section class="screen" id="screen-health" data-title="Sức khỏe">
+      <div class="page-head"><button class="back" data-go="home" aria-label="Quay lại"><span class="ms">arrow_back</span></button><h1>Sức khỏe</h1><span></span></div>
+      <div class="card chart-card" id="healthChart"></div>
+      <div id="vitalResult"></div>
+      <form class="card" id="vitalsForm" autocomplete="off">
+        <h2>Ghi chỉ số hôm nay</h2>
+        <div class="vital-grid">
+          <label class="field"><span>Huyết áp trên</span><input inputmode="numeric" type="number" name="sys" min="50" max="260" placeholder="120"></label>
+          <label class="field"><span>Huyết áp dưới</span><input inputmode="numeric" type="number" name="dia" min="30" max="160" placeholder="80"></label>
+          <label class="field"><span>Nhịp tim</span><input inputmode="numeric" type="number" name="pulse" min="20" max="250" placeholder="75"></label>
+          <label class="field"><span>Đường huyết</span><input inputmode="decimal" type="number" step="0.1" name="sugar" min="1" max="40" placeholder="6.0"></label>
+        </div>
+        <button class="btn big primary full" type="submit" data-say="Lưu chỉ số"><span class="ms">save</span> Lưu chỉ số</button>
+      </form>
+      <div class="sec-head"><h2>Lần đo gần đây</h2></div>
+      <div id="vitalHistory" class="list card"></div>
+      <div class="sec-head"><h2>Lịch hẹn khám</h2><button class="see-all" id="addApptBtn" data-say="Thêm lịch hẹn khám"><span class="ms">add</span> Thêm</button></div>
+      <div id="apptList" class="list card"></div>
+    </section>
+
+    <!-- ============ HỒ SƠ & CÀI ĐẶT ============ -->
+    <section class="screen" id="screen-settings" data-title="Hồ sơ">
+      <div class="profile-head">
+        <span class="avatar big" id="accAvatar">G</span>
+        <div class="acc-info"><b id="accName">—</b><span class="muted" id="accPhone"></span></div>
+      </div>
+      <div class="green-card score" id="healthScore"></div>
+      <p class="muted small sync-line"><span class="tag ok" id="accSync"></span></p>
+
+      <div class="menu card">
+        <details class="menu-item">
+          <summary><span class="mi-ico"><span class="ms">person</span></span>Thông tin cá nhân & người thân<span class="ms chev">chevron_right</span></summary>
+          <form class="menu-body" id="profileForm" autocomplete="off">
+            <label class="field"><span>Tên gọi (ví dụ: Bà Mai)</span><input name="name"></label>
+            <label class="field"><span>Số điện thoại bệnh nhân</span><input name="phone" type="tel"></label>
+            <label class="field"><span>Địa chỉ nhà</span><input name="address"></label>
+            <label class="field"><span>Tên người thân</span><input name="familyName" placeholder="Con gái Lan"></label>
+            <label class="field"><span>Số người thân</span><input name="familyPhone" type="tel"></label>
+            <label class="field"><span>Số bác sĩ / điều dưỡng</span><input name="doctorPhone" type="tel"></label>
+            <label class="field"><span>Số cấp cứu</span><input name="emergencyPhone" type="tel" placeholder="115"></label>
+            <label class="check"><input type="checkbox" name="autoDial"> Tự gọi điện cấp cứu sau khi báo bệnh viện</label>
+            <button class="btn big primary full" type="submit" data-say="Lưu thông tin"><span class="ms">save</span> Lưu thông tin</button>
+          </form>
+        </details>
+        <details class="menu-item">
+          <summary><span class="mi-ico"><span class="ms">record_voice_over</span></span>Giọng đọc & cỡ chữ<span class="ms chev">chevron_right</span></summary>
+          <div class="menu-body">
+            <label class="field"><span>Giọng đọc</span><select id="voiceSelect"></select></label>
+            <p class="label">Tốc độ đọc</p>
+            <div class="seg" id="rateSeg"><button data-rate="0.75">Chậm</button><button data-rate="0.85">Vừa</button><button data-rate="1">Nhanh</button></div>
+            <p class="label">Cỡ chữ</p>
+            <div class="seg" id="sizeSeg"><button data-size="l">Lớn</button><button data-size="xl">Rất lớn</button></div>
+            <button class="btn full" id="testVoiceBtn" data-say=""><span class="ms">play_circle</span> Nghe thử giọng đọc</button>
+            <p class="muted small" id="voiceInfo"></p>
+          </div>
+        </details>
+        <details class="menu-item">
+          <summary><span class="mi-ico"><span class="ms">local_hospital</span></span>Kết nối bệnh viện<span class="ms chev">chevron_right</span></summary>
+          <form class="menu-body" id="linkForm" autocomplete="off">
+            <p class="muted" id="linkState">Đang kiểm tra…</p>
+            <label class="field"><span>Địa chỉ máy chủ GoCare (nâng cao)</span><input name="bridgeUrl" placeholder="Để trống nếu mở app từ máy chủ"></label>
+            <button class="btn full" type="submit" data-say="Kiểm tra kết nối"><span class="ms">sync</span> Kiểm tra kết nối</button>
+            <p class="muted small" id="linkInfo"></p>
+          </form>
+        </details>
+        <details class="menu-item">
+          <summary><span class="mi-ico"><span class="ms">notifications</span></span>Thông báo & màn hình<span class="ms chev">chevron_right</span></summary>
+          <div class="menu-body">
+            <button class="btn full" id="notifBtn" data-say="Cho phép thông báo nhắc thuốc">Cho phép thông báo</button>
+            <button class="btn full" id="wakeBtn" data-say="Giữ màn hình luôn sáng">Giữ màn hình luôn sáng</button>
+          </div>
+        </details>
+        <a class="menu-item link" href="https://quanlyweb-bjsh.vercel.app/" target="_blank" rel="noopener" data-say="Mở trang Bệnh viện GoCare">
+          <span class="mi-ico"><span class="ms">help</span></span>Trợ giúp & Bệnh viện GoCare<span class="ms chev">chevron_right</span>
+        </a>
+      </div>
+      <button class="btn big full logout" id="logoutBtn" data-say="Đăng xuất"><span class="ms">logout</span> Đăng xuất</button>
+    </section>
+  </main>
+
+  <!-- Thanh điều hướng -->
+  <nav class="tabbar" id="tabbar">
+    <button data-go="home" class="active"><span class="ms">home</span>Trang chủ</button>
+    <button data-go="meds"><span class="ms">medication</span>Thuốc</button>
+    <button data-go="safety"><span class="ms">shield</span>An toàn</button>
+    <button data-go="health"><span class="ms">monitoring</span>Sức khỏe</button>
+    <button data-go="settings"><span class="ms">person</span>Hồ sơ</button>
+  </nav>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="overlay-box" id="overlayBox"></div>
+  </div>
+
+  <dialog class="sheet" id="sheet">
+    <form method="dialog" id="sheetForm"></form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#bff2d8"/></linearGradient></defs>
+  </svg>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

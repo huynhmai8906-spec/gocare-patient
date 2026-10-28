@@ -1,0 +1,12 @@
+{
+  "name": "gocare-patient",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App Bệnh Nhân GoCare: nhắc thuốc, gọi cấp cứu, camera chống té ngã — liên kết Web Quản Lý & Web Khách Hàng GoCare",
+  "type": "commonjs",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "hub": "node bridge/server.js",
+    "check": "node --check app/app.js && node --check bridge/server.js && node --check api/emergency.js"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "GoCare Bệnh Nhân",
+  "short_name": "GoCare",
+  "description": "Nhắc uống thuốc, gọi cấp cứu, vùng an toàn và camera chống té ngã cho người cao tuổi",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f1e7",
+  "theme_color": "#0f5c4d",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
