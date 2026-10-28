@@ -6,6 +6,7 @@
   "type": "commonjs",
   "engines": { "node": ">=18" },
   "scripts": {
+    "build": "node -e \"console.log('GoCare: app tinh, khong can build')\"",
     "hub": "node bridge/server.js",
     "check": "node --check app/app.js && node --check bridge/server.js && node --check api/emergency.js"
   }
