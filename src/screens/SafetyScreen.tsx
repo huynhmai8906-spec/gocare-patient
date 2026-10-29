@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { hm } from '../utils/helpers';
 import { CameraFeed } from '../components/CameraFeed';
+import { CameraPermissionModal } from '../components/CameraPermissionModal';
 
 export const SafetyScreen: React.FC = () => {
   const {
@@ -27,8 +28,29 @@ export const SafetyScreen: React.FC = () => {
     health: ['monitor_heart', 'Chỉ số nguy hiểm'],
   };
 
+  const [showPermModal, setShowPermModal] = useState(false);
+  const [cameraPermStatus, setCameraPermStatus] = useState<'prompt' | 'granted' | 'denied' | 'unknown'>('unknown');
+
+  React.useEffect(() => {
+    if ('permissions' in navigator && (navigator.permissions as any).query) {
+      (navigator.permissions as any).query({ name: 'camera' })
+        .then((res: any) => {
+          setCameraPermStatus(res.state);
+          res.onchange = () => setCameraPermStatus(res.state);
+        })
+        .catch(() => setCameraPermStatus('unknown'));
+    }
+  }, []);
+
   return (
     <section className="screen active" id="screen-safety">
+      <CameraPermissionModal
+        isOpen={showPermModal}
+        onClose={() => setShowPermModal(false)}
+        onPermissionGranted={() => {
+          speak('Đã cấp quyền camera thành công');
+        }}
+      />
       <div className="page-head">
         <button
           className="back"
@@ -41,12 +63,88 @@ export const SafetyScreen: React.FC = () => {
           <span className="ms">arrow_back</span>
         </button>
         <h1>An toàn</h1>
-        <span></span>
+        <button
+          className="back"
+          onClick={() => setShowPermModal(true)}
+          title="Cấp quyền Camera"
+          aria-label="Cấp quyền Camera"
+        >
+          <span className="ms fill" style={{ color: 'var(--primary)' }}>verified_user</span>
+        </button>
       </div>
+
+      {/* Camera permission callout banner */}
+      {cameraPermStatus !== 'granted' && (
+        <div
+          className="card"
+          style={{
+            padding: '12px 16px',
+            marginBottom: '12px',
+            background: 'var(--amber-soft)',
+            border: '1px solid var(--amber)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span className="ms fill" style={{ color: 'var(--amber)', fontSize: '1.6em' }}>
+              videocam
+            </span>
+            <div>
+              <b style={{ color: 'var(--amber-ink)', fontSize: '0.86em', display: 'block' }}>
+                Cần cấp quyền truy cập Camera
+              </b>
+              <span style={{ color: 'var(--amber-ink)', fontSize: '0.76em' }}>
+                Để camera nhận diện té ngã tự động bảo vệ người già 24/7
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn primary"
+            style={{ fontSize: '0.82em', padding: '8px 14px', fontWeight: 800, whiteSpace: 'nowrap' }}
+            onClick={() => setShowPermModal(true)}
+          >
+            Cấp quyền ngay
+          </button>
+        </div>
+      )}
 
       {/* ============ INDOOR CAMERAS ============ */}
       <div className="sec-head">
         <h2>Camera trong nhà</h2>
+        <span className="tag ok" style={{ fontSize: '0.72em' }}>
+          <span className="ms fill">dns</span> Node.js Hub Online
+        </span>
+      </div>
+
+      <div
+        className="card"
+        style={{
+          padding: '12px 16px',
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'var(--mint)',
+          border: '1px solid var(--primary-2)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="ms fill" style={{ color: 'var(--primary)', fontSize: '1.4em' }}>
+            lan
+          </span>
+          <div>
+            <b style={{ color: 'var(--primary-deep)', fontSize: '0.85em', display: 'block' }}>
+              Máy chủ Node (GoCare Hub)
+            </b>
+            <span style={{ color: 'var(--on-mint)', fontSize: '0.75em' }}>
+              Cổng 3000 · Quản lý camera thật & thuật toán té ngã
+            </span>
+          </div>
+        </div>
       </div>
 
       <div className="cam-list">
@@ -61,20 +159,32 @@ export const SafetyScreen: React.FC = () => {
               camera={cam}
               onToggle={(start) => toggleCamera(cam.id, start)}
               onDelete={() => deleteCamera(cam.id)}
+              onRequestPermModal={() => setShowPermModal(true)}
             />
           ))
         )}
       </div>
 
-      <button
-        className="btn big primary full"
-        onClick={() => {
-          speak('Cài camera mới');
-          setAddingCam(true);
-        }}
-      >
-        <span className="ms">add_a_photo</span> Cài camera mới
-      </button>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+        <button
+          className="btn primary full"
+          onClick={() => setShowPermModal(true)}
+          style={{ fontWeight: 800, fontSize: '0.85em', padding: '12px 10px' }}
+        >
+          <span className="ms fill">verified_user</span> Cấp quyền Camera
+        </button>
+
+        <button
+          className="btn full"
+          onClick={() => {
+            speak('Cài camera mới');
+            setAddingCam(true);
+          }}
+          style={{ fontWeight: 700, fontSize: '0.85em', padding: '12px 10px' }}
+        >
+          <span className="ms">add_a_photo</span> Cài camera mới
+        </button>
+      </div>
 
       <div className="tip" style={{ marginTop: '12px' }}>
         <span className="ms">health_and_safety</span>

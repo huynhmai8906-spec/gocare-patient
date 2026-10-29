@@ -21,6 +21,21 @@ export const OnboardingScreen: React.FC = () => {
     typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted'
   );
   const [locGranted, setLocGranted] = useState(false);
+  const [cameraGranted, setCameraGranted] = useState(false);
+
+  // Check if camera permission was already granted
+  React.useEffect(() => {
+    if ('permissions' in navigator && (navigator.permissions as any).query) {
+      (navigator.permissions as any).query({ name: 'camera' })
+        .then((status: any) => {
+          if (status.state === 'granted') setCameraGranted(true);
+          status.onchange = () => {
+            if (status.state === 'granted') setCameraGranted(true);
+          };
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   if (onboardingStep === null) return null;
 
@@ -34,7 +49,7 @@ export const OnboardingScreen: React.FC = () => {
   const handleStep1 = (e: React.FormEvent) => {
     e.preventDefault();
     updateProfile({ familyName: familyName.trim(), familyPhone: familyPhone.trim() });
-    speak('Bước cuối: cho phép thông báo và vị trí, rồi bấm Bắt đầu dùng GoCare.');
+    speak('Bước cuối: cho phép thông báo, vị trí và camera bảo vệ, rồi bấm Bắt đầu dùng GoCare.');
     setOnboardingStep(2);
   };
 
@@ -53,6 +68,23 @@ export const OnboardingScreen: React.FC = () => {
     if (ok) {
       setLocGranted(true);
       speak('Đã lưu vị trí nhà');
+    }
+  };
+
+  const handleRequestCamera = async () => {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Trình duyệt không hỗ trợ trực tiếp Camera');
+        return;
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      stream.getTracks().forEach((t) => t.stop());
+      setCameraGranted(true);
+      speak('Đã cấp quyền camera thành công. Hệ thống đã có thể giám sát an toàn.');
+      showToast('Đã cấp quyền Camera!');
+    } catch (err: any) {
+      console.warn('Onboarding camera request:', err);
+      showToast('Chưa thể cấp quyền camera: ' + (err.message || 'vui lòng cho phép trong trình duyệt'));
     }
   };
 
@@ -227,6 +259,23 @@ export const OnboardingScreen: React.FC = () => {
                   onClick={handleRequestLoc}
                 >
                   {locGranted ? 'Đã bật' : 'Cho phép'}
+                </button>
+              </div>
+
+              <div className="perm">
+                <span className="f-ico c-green">
+                  <span className="ms fill">videocam</span>
+                </span>
+                <span className="perm-body">
+                  <b>Camera giám sát</b>
+                  <br />
+                  <span className="muted">Phát hiện té ngã và cảnh báo ngay</span>
+                </span>
+                <button
+                  className={`btn ${cameraGranted ? 'okay' : 'tonal'}`}
+                  onClick={handleRequestCamera}
+                >
+                  {cameraGranted ? 'Đã bật' : 'Cho phép'}
                 </button>
               </div>
 
